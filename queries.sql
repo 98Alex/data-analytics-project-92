@@ -45,3 +45,20 @@ SELECT
 FROM t_1
 GROUP BY seller, day_of_week, day_of_week_num
 ORDER BY day_of_week_num, seller
+
+-- запрос для анализа возрастных групп покупателей
+with t_1 as(
+SELECT customer_id,
+  CASE 
+    WHEN age BETWEEN 16 AND 25 THEN '16-25'
+    WHEN age BETWEEN 26 AND 40 THEN '26-40'
+    WHEN age > 40 THEN '40+'
+    ELSE 'Unknown'
+  END AS age_category
+FROM customers c
+)
+select age_category,
+count(customer_id) age_count
+from t_1
+group by 1
+order by 1
