@@ -71,3 +71,26 @@ from sales s
 join products p using(product_id)
 group by 1
 order by 1 asc
+
+-- Запрос на поиск покупателей, чья первая покупка пришлась на акцию
+WITH ranked_sales AS (
+  SELECT 
+    c.customer_id,
+    c.first_name || ' ' || c.last_name AS customer,
+    s.sales_id,
+    e.first_name || ' ' || e.last_name AS seller, 
+    s.sale_date, 
+    p.price,
+    ROW_NUMBER() OVER (PARTITION BY c.customer_id ORDER BY s.sale_date) AS rn
+  FROM sales s
+  JOIN products p USING(product_id)
+  JOIN employees e ON e.employee_id = s.sales_person_id
+  JOIN customers c ON c.customer_id = s.customer_id
+)
+SELECT 
+  customer,
+  sale_date,
+  seller 
+FROM ranked_sales
+WHERE rn = 1 AND price = 0
+ORDER BY sale_date;
