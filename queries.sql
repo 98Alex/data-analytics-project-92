@@ -24,8 +24,8 @@ from sales s
 left join employees e on s.sales_person_id = e.employee_id
 left join products p on s.product_id = p.product_id
 group by first_name|| ' '||last_name
-order by income
-limit 10
+order by income desc
+limit 10 
 
 -- Запрос для поиска выручки по дням недели
 WITH t_1 AS (
