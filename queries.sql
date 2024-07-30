@@ -64,8 +64,8 @@ group by 1
 order by 1
 
 -- Запрос на подсчёт количества уникальных покупателей по месяцам
-select to_char(sale_date, 'YYYY-MM') date,
-count(customer_id) total_customers,
+select to_char(sale_date, 'YYYY-MM') selling_month,
+count(distinct(customer_id)) total_customers,
 floor(sum(s.quantity * p.price)) income
 from sales s 
 join products p using(product_id)
