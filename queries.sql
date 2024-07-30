@@ -31,8 +31,8 @@ limit 10
 WITH t_1 AS (
   SELECT 
     e.first_name || ' ' || e.last_name AS seller,
-    TO_CHAR(s.sale_date, 'Day') AS day_of_week,
-    FLOOR(s.quantity * p.price) AS income,
+    TO_CHAR(s.sale_date, 'day') AS day_of_week,
+    s.quantity * p.price AS income,
     EXTRACT(ISODOW FROM s.sale_date) AS day_of_week_num
   FROM sales s
   LEFT JOIN employees e ON e.employee_id = s.sales_person_id
@@ -41,10 +41,10 @@ WITH t_1 AS (
 SELECT 
   seller,
   day_of_week,
-  SUM(income) AS total_income
+  floor(SUM(income)) AS income
 FROM t_1
-GROUP BY seller, day_of_week, day_of_week_num
-ORDER BY day_of_week_num, seller
+GROUP BY seller, day_of_week,  day_of_week_num
+ORDER BY day_of_week_num, seller;
 
 -- запрос для анализа возрастных групп покупателей
 with t_1 as(
