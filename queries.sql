@@ -75,22 +75,22 @@ order by 1 asc
 -- Запрос на поиск покупателей, чья первая покупка пришлась на акцию
 WITH ranked_sales AS (
   SELECT 
-    c.customer_id,
+    s.customer_id,
     c.first_name || ' ' || c.last_name AS customer,
-    s.sales_id,
+    s.sale_date,
     e.first_name || ' ' || e.last_name AS seller, 
-    s.sale_date, 
-    p.price,
-    ROW_NUMBER() OVER (PARTITION BY c.customer_id ORDER BY s.sale_date) AS rn
+    sum(p.price * s.quantity) as total_sum,
+    ROW_NUMBER() OVER (PARTITION BY s.customer_id ORDER BY s.sale_date) AS rn
   FROM sales s
   JOIN products p USING(product_id)
   JOIN employees e ON e.employee_id = s.sales_person_id
   JOIN customers c ON c.customer_id = s.customer_id
+  GROUP BY s.customer_id, c.first_name, c.last_name, s.sale_date, e.first_name, e.last_name
 )
 SELECT 
   customer,
   sale_date,
-  seller 
+  seller
 FROM ranked_sales
-WHERE rn = 1 AND price = 0
-ORDER BY sale_date;
+WHERE total_sum = 0 AND rn = 1
+ORDER BY customer_id;
