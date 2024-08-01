@@ -15,7 +15,7 @@ avg(quantity * price) < (
     from sales
     inner join products on sales.product_id = products.product_id
 )
-order by 2;
+order by 2
 
 -- Запрос для поиска топ-10 лучших продавцов
 select
@@ -27,7 +27,7 @@ left join employees as e on s.sales_person_id = e.employee_id
 left join products as p on s.product_id = p.product_id
 group by first_name || ' ' || last_name
 order by income desc
-limit 10
+limit 10;
 
 -- Запрос для поиска выручки по дням недели
 with t_1 as (
