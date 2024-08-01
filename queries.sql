@@ -16,7 +16,7 @@ having
         from sales
         inner join products on sales.product_id = products.product_id
     )
-order by 2;
+order by 2 asc;
 
 -- Запрос для поиска топ-10 лучших продавцов
 select
@@ -34,9 +34,9 @@ limit 10;
 with t_1 as (
     select
         e.first_name || ' ' || e.last_name as seller,
-        TO_CHAR(s.sale_date, 'day') as day_of_week,
+        to_char(s.sale_date, 'day') as day_of_week,
         s.quantity * p.price as income,
-        EXTRACT(isodow from s.sale_date) as day_of_week_num
+        extract(isodow from s.sale_date) as day_of_week_num
     from sales as s
     left join employees as e on s.sales_person_id = e.employee_id
     left join products as p on s.product_id = p.product_id
@@ -48,7 +48,7 @@ select
     FLOOR(SUM(income)) as income
 from t_1
 group by seller, day_of_week, day_of_week_num
-order by day_of_week_num, seller;
+order by day_of_week_num asc, seller asc;
 
 -- Запрос для анализа возрастных групп покупателей
 with t_1 as (
@@ -68,13 +68,13 @@ select
     count(customer_id) as age_count
 from t_1
 group by 1
-order by 1;
+order by 1 asc;
 
 -- Запрос на подсчёт количества уникальных покупателей по месяцам
 select
-    TO_CHAR(sale_date, 'YYYY-MM') as selling_month,
-    COUNT(distinct customer_id) as total_customers,
-    FLOOR(SUM(s.quantity * p.price)) as income
+    to_char(sale_date, 'YYYY-MM') as selling_month,
+    count(distinct customer_id) as total_customers,
+    floor(SUM(s.quantity * p.price)) as income
 from sales as s
 inner join products as p on s.product_id = p.product_id
 group by 1
@@ -110,4 +110,4 @@ select
     seller
 from ranked_sales
 where total_sum = 0 and rn = 1
-order by customer_id;
+order by customer_id asc;
