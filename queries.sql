@@ -70,10 +70,11 @@ order by selling_month;
 
 -- Запрос на поиск покупателей, чья первая покупка пришлась на акцию
 
-select distinct on (s.customer_id)
-    c.first_name || ' ' || c.last_name AS customer,    
+select 
+    distinct on (s.customer_id)
+    c.first_name || ' ' || c.last_name as customer,    
     s.sale_date,
-    e.first_name || ' ' || e.last_name AS seller
+    e.first_name || ' ' || e.last_name as seller
 from sales as s
 inner join products as p on s.product_id = p.product_id
 inner join employees as e on s.sales_person_id = e.employee_id
