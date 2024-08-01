@@ -2,20 +2,20 @@
 select count(customer_id) from customers
 
 -- Запрос для поиска продавцов с маленькой средней выручкой
-SELECT
-    e.first_name || ' ' || e.last_name AS seller,
-    FLOOR(AVG(s.quantity * p.price)) AS average_income
-FROM sales AS s
-INNER JOIN products AS p ON s.product_id = p.product_id
-INNER JOIN employees AS e ON s.sales_person_id = e.employee_id
-GROUP BY e.first_name, e.last_name
-HAVING
-    AVG(s.quantity * p.price) < (
-        SELECT AVG(s2.quantity * p2.price)
-        FROM sales AS s2
-        INNER JOIN products AS p2 ON s2.product_id = p2.product_id
+select
+    first_name || ' ' || last_name as seller,
+    floor(avg(quantity * price)) as average_income
+from sales as s
+inner join products on s.product_id = products.product_id
+inner join employees as e on s.sales_person_id = e.employee_id
+group by 1
+having
+    avg(quantity * price) < (
+        select avg(quantity * price)
+        from sales
+        inner join products on sales.product_id = products.product_id
     )
-ORDER BY average_income;
+order by 2
 
 -- Запрос для поиска топ-10 лучших продавцов
 select
