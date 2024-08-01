@@ -30,24 +30,24 @@ order by income desc
 limit 10;
 
 -- Запрос для поиска выручки по дням недели
-WITH t_1 AS (
-    SELECT
+with t_1 as (
+    select
         e.first_name || ' ' || e.last_name as seller,
         TO_CHAR(s.sale_date, 'day') as day_of_week,
         s.quantity * p.price as income,
-        EXTRACT(ISODOW FROM s.sale_date) as day_of_week_num
-    FROM sales AS s
-    LEFT JOIN employees AS e ON s.sales_person_id = e.employee_id
-    LEFT JOIN products AS p on p.product_id = s.product_id
+        EXTRACT(ISODOW from s.sale_date) as day_of_week_num
+    from sales AS s
+    left join employees as e on s.sales_person_id = e.employee_id
+    left join products as p on p.product_id = s.product_id
 )
 
-SELECT
+select
     seller,
     day_of_week,
-    FLOOR(SUM(income)) AS income
-FROM t_1
-GROUP BY seller, day_of_week, day_of_week_num
-ORDER BY day_of_week_num, seller
+    FLOOR(SUM(income)) as income
+from t_1
+group by seller, day_of_week, day_of_week_num
+order by day_of_week_num, seller
 
 -- Запрос для анализа возрастных групп покупателей
 with t_1 as (
@@ -80,21 +80,21 @@ group by 1
 order by 1 asc;
 
 -- Запрос на поиск покупателей, чья первая покупка пришлась на акцию
-WITH ranked_sales AS (
-    SELECT
+with ranked_sales as (
+    select
         s.customer_id,
         s.sale_date,
-        c.first_name || ' ' || c.last_name AS customer,
-        e.first_name || ' ' || e.last_name AS seller,
-        sum(p.price * s.quantity) AS total_sum,
+        c.first_name || ' ' || c.last_name as customer,
+        e.first_name || ' ' || e.last_name as seller,
+        sum(p.price * s.quantity) as total_sum,
         row_number()
-            OVER (PARTITION BY s.customer_id ORDER BY s.sale_date)
-        AS rn
-    FROM sales AS s
-    INNER JOIN products AS p ON s.product_id = p.product_id
-INNER JOIN employees AS e ON s.sales_person_id = e.employee_id
-INNER JOIN customers AS c ON s.customer_id = c.customer_id
-GROUP BY
+            OVER (PARTITION by s.customer_id order by s.sale_date)
+        as rn
+    from sales as s
+    inner join products as p on s.product_id = p.product_id
+inner join employees as e on s.sales_person_id = e.employee_id
+inner join customers as c on s.customer_id = c.customer_id
+group by
     s.customer_id,
     c.first_name,
     c.last_name,
@@ -103,10 +103,10 @@ GROUP BY
     e.last_name
 )
 
-SELECT
+select
     customer,
     sale_date,
     seller
-FROM ranked_sales
-WHERE total_sum = 0 AND rn = 1
-ORDER BY customer_id;
+from ranked_sales
+where total_sum = 0 and rn = 1
+order by customer_id;
