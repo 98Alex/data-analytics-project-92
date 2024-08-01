@@ -7,14 +7,14 @@ select
     e.first_name || ' ' || e.last_name as seller,
     floor(avg(s.quantity * p.price)) as average_income
 from sales as s
-inner join products on s.product_id = products.product_id
+inner join products as p on s.product_id = p.product_id
 inner join employees as e on s.sales_person_id = e.employee_id
 group by first_name || ' ' || last_name
 having
     avg(s.quantity * p.price) < (
         select avg(s.quantity * p.price)
         from sales as s
-        inner join products as p on sales.product_id = products.product_id
+        inner join products as p on sales.product_id = p.product_id
     )
 order by average_income;
 
@@ -72,12 +72,12 @@ order by age_category asc;
 
 -- Запрос на подсчёт количества уникальных покупателей по месяцам
 select
-    to_char(sale_date, 'YYYY-MM') as selling_month,
+    to_char(s.sale_date, 'YYYY-MM') as selling_month,
     count(distinct customer_id) as total_customers,
     floor(SUM(s.quantity * p.price)) as income
 from sales as s
 inner join products as p on s.product_id = p.product_id
-group by to_char(sale_date, 'YYYY-MM')
+group by to_char(s.sale_date, 'YYYY-MM')
 order by selling_month;
 
 -- Запрос на поиск покупателей, чья первая покупка пришлась на акцию
