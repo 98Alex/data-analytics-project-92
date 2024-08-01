@@ -16,7 +16,7 @@ having
         from sales
         inner join products on sales.product_id = products.product_id
     )
-order by 2 asc;
+order by floor(avg(quantity * price)) asc;
 
 -- Запрос для поиска топ-10 лучших продавцов
 select
@@ -68,7 +68,7 @@ select
     count(customer_id) as age_count
 from t_1
 group by 1
-order by 1 asc;
+order by age_category asc;
 
 -- Запрос на подсчёт количества уникальных покупателей по месяцам
 select
@@ -77,8 +77,8 @@ select
     floor(SUM(s.quantity * p.price)) as income
 from sales as s
 inner join products as p on s.product_id = p.product_id
-group by 1
-order by 1 asc;
+group by to_char(sale_date, 'YYYY-MM')
+order by to_char(sale_date, 'YYYY-MM') asc;
 
 -- Запрос на поиск покупателей, чья первая покупка пришлась на акцию
 with ranked_sales as (
