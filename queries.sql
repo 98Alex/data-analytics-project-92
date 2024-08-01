@@ -10,11 +10,11 @@ inner join products on s.product_id = products.product_id
 inner join employees as e on s.sales_person_id = e.employee_id
 group by 1
 having
-avg(quantity * price) < (
-    select avg(quantity * price)
-    from sales
-    inner join products on sales.product_id = products.product_id
-)
+    avg(quantity * price) < (
+        select avg(quantity * price)
+        from sales
+        inner join products on sales.product_id = products.product_id
+    )
 order by 2
 
 -- Запрос для поиска топ-10 лучших продавцов
