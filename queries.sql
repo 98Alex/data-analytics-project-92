@@ -1,5 +1,5 @@
 -- Запрос на всю таблицу customers
-select count(customer_id) from customers;
+select count(customer_id) from customers
 
 -- Запрос для поиска продавцов с маленькой средней выручкой
 select
@@ -15,7 +15,7 @@ avg(quantity * price) < (
     from sales
     inner join products on sales.product_id = products.product_id
 )
-order by 2;
+order by 2
 
 -- Запрос для поиска топ-10 лучших продавцов
 select
@@ -47,7 +47,7 @@ SELECT
     FLOOR(SUM(income)) AS income
 FROM t_1
 GROUP BY seller, day_of_week, day_of_week_num
-ORDER BY day_of_week_num, seller;
+ORDER BY day_of_week_num, seller
 
 -- Запрос для анализа возрастных групп покупателей
 with t_1 as (
