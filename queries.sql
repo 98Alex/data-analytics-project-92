@@ -4,17 +4,17 @@ from customers;
 
 -- Запрос для поиска продавцов с маленькой средней выручкой
 select
-    first_name || ' ' || last_name as seller,
-    floor(avg(quantity * price)) as average_income
+    e.first_name || ' ' || e.last_name as seller,
+    floor(avg(s.quantity * p.price)) as average_income
 from sales as s
 inner join products on s.product_id = products.product_id
 inner join employees as e on s.sales_person_id = e.employee_id
 group by first_name || ' ' || last_name
 having
-    avg(quantity * price) < (
-        select avg(quantity * price)
-        from sales
-        inner join products on sales.product_id = products.product_id
+    avg(s.quantity * p.price) < (
+        select avg(s.quantity * p.price)
+        from sales as s
+        inner join products as p on sales.product_id = products.product_id
     )
 order by average_income;
 
