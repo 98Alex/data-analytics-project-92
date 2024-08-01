@@ -31,24 +31,15 @@ order by income desc
 limit 10;
 
 -- Запрос для поиска выручки по дням недели
-with t_1 as (
-    select
-        e.first_name || ' ' || e.last_name as seller,
-        to_char(s.sale_date, 'day') as day_of_week,
-        s.quantity * p.price as income,
-        extract(isodow from s.sale_date) as day_of_week_num
-    from sales as s
-    left join employees as e on s.sales_person_id = e.employee_id
-    left join products as p on s.product_id = p.product_id
-)
-
-select
-    seller,
-    day_of_week,
-    floor(sum(income)) as income
-from t_1
-group by seller, day_of_week, day_of_week_num
-order by day_of_week_num, seller;
+select 
+    e.first_name || ' ' || e.last_name AS seller,
+    to_char(s.sale_date, 'day') AS day_of_week,
+    floor(sum(s.quantity * p.price)) AS income
+from sales as s
+left join employees as e on s.sales_person_id = e.employee_id
+left join products as p on s.product_id = p.product_id
+group by e.first_name, e.last_name, to_char(s.sale_date, 'day'), extract(isodow from s.sale_date)
+order by extract(isodow FROM s.sale_date), seller;
 
 -- Запрос для анализа возрастных групп покупателей
 with t_1 as (
