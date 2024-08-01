@@ -9,7 +9,7 @@ select
 from sales as s
 inner join products on s.product_id = products.product_id
 inner join employees as e on s.sales_person_id = e.employee_id
-group by 1
+group by first_name || ' ' || last_name
 having
     avg(quantity * price) < (
         select avg(quantity * price)
@@ -26,7 +26,7 @@ select
 from sales as s
 left join employees as e on s.sales_person_id = e.employee_id
 left join products as p on s.product_id = p.product_id
-group by first_name || ' ' || last_name
+group by e.first_name || ' ' || e.last_name
 order by income desc
 limit 10;
 
@@ -45,7 +45,7 @@ with t_1 as (
 select
     seller,
     day_of_week,
-    FLOOR(SUM(income)) as income
+    floor(sum(income)) as income
 from t_1
 group by seller, day_of_week, day_of_week_num
 order by day_of_week_num, seller;
