@@ -1,5 +1,5 @@
 -- Запрос на всю таблицу customers
-select * from customers
+select count(customer_id) from customers
 
 -- Запрос для поиска продавцов с маленькой средней выручкой
 select
@@ -38,7 +38,7 @@ WITH t_1 AS (
         EXTRACT(ISODOW FROM s.sale_date) AS day_of_week_num
     FROM sales AS s
     LEFT JOIN employees AS e ON s.sales_person_id = e.employee_id
-    LEFT JOIN products AS p USING (product_id)
+    LEFT JOIN products AS p on p.product_id = s.product_id
 )
 
 SELECT
@@ -49,7 +49,7 @@ FROM t_1
 GROUP BY seller, day_of_week, day_of_week_num
 ORDER BY day_of_week_num, seller;
 
--- запрос для анализа возрастных групп покупателей
+-- Запрос для анализа возрастных групп покупателей
 with t_1 as (
     select
         customer_id,
@@ -70,9 +70,9 @@ group by 1
 order by 1
 
 -- Запрос на подсчёт количества уникальных покупателей по месяцам
-select to_char(sale_date, 'YYYY-MM') selling_month,
-count(distinct(customer_id)) total_customers,
-floor(sum(s.quantity * p.price)) income
+select to_char(sale_date, 'YYYY-MM') AS selling_month,
+count(distinct(customer_id)) AS total_customers,
+floor(sum(s.quantity * p.price)) AS income
 from sales s 
 join products p using(product_id)
 group by 1
