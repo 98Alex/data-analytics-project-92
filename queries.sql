@@ -19,7 +19,7 @@ order by 2
 
 -- Запрос для поиска топ-10 лучших продавцов
 select
-    first_name || ' ' || last_name as seller,
+    e.first_name || ' ' || e.last_name as seller,
     count(s.sales_id) as operations,
     floor(sum(s.quantity * p.price)) as income
 from sales as s
@@ -32,10 +32,10 @@ limit 10
 -- Запрос для поиска выручки по дням недели
 WITH t_1 AS (
     SELECT
-        e.first_name || ' ' || e.last_name AS seller,
-        TO_CHAR(s.sale_date, 'day') AS day_of_week,
-        s.quantity * p.price AS income,
-        EXTRACT(ISODOW FROM s.sale_date) AS day_of_week_num
+        e.first_name || ' ' || e.last_name as seller,
+        TO_CHAR(s.sale_date, 'day') as day_of_week,
+        s.quantity * p.price as income,
+        EXTRACT(ISODOW FROM s.sale_date) as day_of_week_num
     FROM sales AS s
     LEFT JOIN employees AS e ON s.sales_person_id = e.employee_id
     LEFT JOIN products AS p on p.product_id = s.product_id
@@ -70,9 +70,10 @@ group by 1
 order by 1
 
 -- Запрос на подсчёт количества уникальных покупателей по месяцам
-select to_char(sale_date, 'YYYY-MM') AS selling_month,
-count(distinct(customer_id)) AS total_customers,
-floor(sum(s.quantity * p.price)) AS income
+select 
+    to_char(sale_date, 'YYYY-MM') as selling_month,
+    count(distinct(customer_id)) AS total_customers,
+    floor(sum(s.quantity * p.price)) AS income
 from sales s 
 join products p using(product_id)
 group by 1
@@ -103,9 +104,9 @@ GROUP BY
 )
 
 SELECT
-customer,
-sale_date,
-seller
+    customer,
+    sale_date,
+    seller
 FROM ranked_sales
 WHERE total_sum = 0 AND rn = 1
 ORDER BY customer_id;
