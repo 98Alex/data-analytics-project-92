@@ -15,7 +15,7 @@ avg(quantity * price) < (
     from sales
     inner join products on sales.product_id = products.product_id
 )
-order by 2
+order by 2;
 
 -- Запрос для поиска топ-10 лучших продавцов
 select
