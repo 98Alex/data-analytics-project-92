@@ -9,7 +9,7 @@ select
 from sales as s
 inner join products as p on s.product_id = p.product_id
 inner join employees as e on s.sales_person_id = e.employee_id
-group by first_name || ' ' || last_name
+group by e.first_name || ' ' || e.last_name
 having
     avg(s.quantity * p.price) < (
         select avg(s.quantity * p.price)
@@ -60,7 +60,7 @@ with t_1 as (
             when age > 40 then '40+'
             else 'Unknown'
         end as age_category
-    from customers
+    from customers as c
 )
 
 select
@@ -73,7 +73,7 @@ order by age_category asc;
 -- Запрос на подсчёт количества уникальных покупателей по месяцам
 select
     to_char(s.sale_date, 'YYYY-MM') as selling_month,
-    count(distinct customer_id) as total_customers,
+    count(distinct s.customer_id) as total_customers,
     floor(SUM(s.quantity * p.price)) as income
 from sales as s
 inner join products as p on s.product_id = p.product_id
