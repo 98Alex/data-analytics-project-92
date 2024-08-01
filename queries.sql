@@ -1,5 +1,5 @@
 -- Запрос на всю таблицу customers
-select count(customer_id) from customers
+select count(customer_id) from customers;
 
 -- Запрос для поиска продавцов с маленькой средней выручкой
 select
@@ -15,7 +15,7 @@ avg(quantity * price) < (
     from sales
     inner join products on sales.product_id = products.product_id
 )
-order by 2
+order by 2;
 
 -- Запрос для поиска топ-10 лучших продавцов
 select
@@ -27,7 +27,7 @@ left join employees as e on s.sales_person_id = e.employee_id
 left join products as p on s.product_id = p.product_id
 group by first_name || ' ' || last_name
 order by income desc
-limit 10
+limit 10;
 
 -- Запрос для поиска выручки по дням недели
 WITH t_1 AS (
@@ -67,7 +67,7 @@ select
     count(customer_id) as age_count
 from t_1
 group by 1
-order by 1
+order by 1;
 
 -- Запрос на подсчёт количества уникальных покупателей по месяцам
 select 
@@ -77,7 +77,7 @@ select
 from sales s 
 join products p using(product_id)
 group by 1
-order by 1 asc
+order by 1 asc;
 
 -- Запрос на поиск покупателей, чья первая покупка пришлась на акцию
 WITH ranked_sales AS (
