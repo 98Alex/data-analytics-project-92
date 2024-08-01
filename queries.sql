@@ -71,7 +71,7 @@ order by 1
 
 -- Запрос на подсчёт количества уникальных покупателей по месяцам
 select 
-    to_char(sale_date, 'YYYY-MM') as selling_month,
+    TO_CHAR(sale_date, 'YYYY-MM') as selling_month,
     count(distinct(customer_id)) AS total_customers,
     floor(sum(s.quantity * p.price)) AS income
 from sales s 
