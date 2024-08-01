@@ -1,5 +1,5 @@
 -- Запрос на всю таблицу customers
-select count(customer_id) from customers;
+select count(customer_id) from customers
 
 -- Запрос для поиска продавцов с маленькой средней выручкой
 select
@@ -15,7 +15,7 @@ avg(quantity * price) < (
     from sales
     inner join products on sales.product_id = products.product_id
 )
-order by 2
+order by 2;
 
 -- Запрос для поиска топ-10 лучших продавцов
 select
