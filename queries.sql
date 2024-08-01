@@ -46,24 +46,17 @@ group by
 order by extract(isodow from s.sale_date), seller;
 
 -- Запрос для анализа возрастных групп покупателей
-with t_1 as (
-    select
-        customer_id,
-        case
-            when age between 16 and 25 then '16-25'
-            when age between 26 and 40 then '26-40'
-            when age > 40 then '40+'
-            else 'Unknown'
-        end as age_category
-    from customers
-)
-
 select
-    age_category,
+    case
+        when age between 16 and 25 then '16-25'
+        when age between 26 and 40 then '26-40'
+        when age > 40 then '40+'
+        else 'Unknown'
+    end as age_category,
     count(customer_id) as age_count
-from t_1
+from customers
 group by age_category
-order by age_category asc;
+order by age_category;
 
 -- Запрос на подсчёт количества уникальных покупателей по месяцам
 select
