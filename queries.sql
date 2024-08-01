@@ -1,6 +1,6 @@
 -- Запрос на всю таблицу customers
-select count(customer_id) 
-    from customers;
+select count(customer_id)
+from customers;
 
 -- Запрос для поиска продавцов с маленькой средней выручкой
 select
@@ -36,10 +36,10 @@ with t_1 as (
         e.first_name || ' ' || e.last_name as seller,
         TO_CHAR(s.sale_date, 'day') as day_of_week,
         s.quantity * p.price as income,
-        EXTRACT(ISODOW from s.sale_date) as day_of_week_num
-    from sales AS s
+        EXTRACT(isodow from s.sale_date) as day_of_week_num
+    from sales as s
     left join employees as e on s.sales_person_id = e.employee_id
-    left join products as p on p.product_id = s.product_id
+    left join products as p on s.product_id = p.product_id
 )
 
 select
@@ -71,12 +71,12 @@ group by 1
 order by 1;
 
 -- Запрос на подсчёт количества уникальных покупателей по месяцам
-select 
+select
     TO_CHAR(sale_date, 'YYYY-MM') as selling_month,
-    count(distinct(customer_id)) AS total_customers,
-    floor(sum(s.quantity * p.price)) AS income
-from sales s 
-join products p using(product_id)
+    COUNT(distinct customer_id) as total_customers,
+    FLOOR(SUM(s.quantity * p.price)) as income
+from sales as s
+inner join products as p on s.product_id = p.product_id
 group by 1
 order by 1 asc;
 
@@ -89,19 +89,19 @@ with ranked_sales as (
         e.first_name || ' ' || e.last_name as seller,
         sum(p.price * s.quantity) as total_sum,
         row_number()
-            OVER (PARTITION by s.customer_id order by s.sale_date)
+            over (partition by s.customer_id order by s.sale_date)
         as rn
     from sales as s
     inner join products as p on s.product_id = p.product_id
-inner join employees as e on s.sales_person_id = e.employee_id
-inner join customers as c on s.customer_id = c.customer_id
-group by
-    s.customer_id,
-    c.first_name,
-    c.last_name,
-    s.sale_date,
-    e.first_name,
-    e.last_name
+    inner join employees as e on s.sales_person_id = e.employee_id
+    inner join customers as c on s.customer_id = c.customer_id
+    group by
+        s.customer_id,
+        c.first_name,
+        c.last_name,
+        s.sale_date,
+        e.first_name,
+        e.last_name
 )
 
 select
