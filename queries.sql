@@ -1,5 +1,5 @@
 -- Запрос на всю таблицу customers
-select count(customer_id) from customers
+select count(customer_id) from customers;
 
 -- Запрос для поиска продавцов с маленькой средней выручкой
 select
