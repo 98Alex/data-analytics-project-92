@@ -1,5 +1,5 @@
 -- Запрос на всю таблицу customers
-select count(distinct(customer_id))
+select count(distinct customer_id)
 from customers;
 
 -- Запрос для поиска продавцов с маленькой средней выручкой
@@ -14,7 +14,7 @@ having
     avg(s.quantity * p.price) < (
         select avg(s.quantity * p.price)
         from sales as s
-        inner join products as p on sales.product_id = p.product_id
+        inner join products on sales.product_id = products.product_id
     )
 order by average_income;
 
