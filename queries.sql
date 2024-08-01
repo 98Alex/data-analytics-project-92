@@ -71,8 +71,8 @@ order by selling_month;
 -- Запрос на поиск покупателей, чья первая покупка пришлась на акцию
 
 select distinct on (s.customer_id)
-	c.first_name || ' ' || c.last_name AS customer,    
-	s.sale_date,
+    c.first_name || ' ' || c.last_name AS customer,    
+    s.sale_date,
     e.first_name || ' ' || e.last_name AS seller
 from sales as s
 inner join products as p on s.product_id = p.product_id
