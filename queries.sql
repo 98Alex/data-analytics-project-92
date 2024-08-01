@@ -69,33 +69,14 @@ group by to_char(s.sale_date, 'YYYY-MM')
 order by selling_month;
 
 -- Запрос на поиск покупателей, чья первая покупка пришлась на акцию
-with ranked_sales as (
-    select
-        s.customer_id,
-        s.sale_date,
-        c.first_name || ' ' || c.last_name as customer,
-        e.first_name || ' ' || e.last_name as seller,
-        sum(p.price * s.quantity) as total_sum,
-        row_number()
-            over (partition by s.customer_id order by s.sale_date)
-        as rn
-    from sales as s
-    inner join products as p on s.product_id = p.product_id
-    inner join employees as e on s.sales_person_id = e.employee_id
-    inner join customers as c on s.customer_id = c.customer_id
-    group by
-        s.customer_id,
-        c.first_name,
-        c.last_name,
-        s.sale_date,
-        e.first_name,
-        e.last_name
-)
 
-select
-    customer,
-    sale_date,
-    seller
-from ranked_sales
-where total_sum = 0 and rn = 1
-order by customer_id;
+select distinct on (s.customer_id)
+	c.first_name || ' ' || c.last_name AS customer,    
+	s.sale_date,
+    e.first_name || ' ' || e.last_name AS seller
+from sales as s
+inner join products as p on s.product_id = p.product_id
+inner join employees as e on s.sales_person_id = e.employee_id
+inner join customers as c on s.customer_id = c.customer_id
+where p.price = 0
+order by s.customer_id, s.sale_date;
