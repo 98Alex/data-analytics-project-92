@@ -60,7 +60,7 @@ with t_1 as (
             when age > 40 then '40+'
             else 'Unknown'
         end as age_category
-    from customers as c
+    from customers
 )
 
 select
