@@ -70,8 +70,7 @@ order by selling_month;
 
 -- Запрос на поиск покупателей, чья первая покупка пришлась на акцию
 
-select 
-    distinct on (s.customer_id)
+select distinct on (s.customer_id)
     c.first_name || ' ' || c.last_name as customer,    
     s.sale_date,
     e.first_name || ' ' || e.last_name as seller
